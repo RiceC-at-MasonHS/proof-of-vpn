@@ -42,9 +42,14 @@
     <p><small>A simple website to prove network membership (when studying VPNs in Cyber).<br>Designed to look nice in browsers and via cURL requests.</small></p>
     </div>
     <script>
-        // Fallback for when not served by the Python server or Jinja
-        if (document.getElementById('hostname').textContent.trim() === '') {
-            document.getElementById('hostname').textContent = window.location.hostname || "localhost";
+        // Check if hosted on GitHub Pages or if the placeholder wasn't replaced
+        const hostnameElement = document.getElementById('hostname');
+        const currentContent = hostnameElement.textContent.trim();
+        
+        if (window.location.hostname.endsWith('.github.io')) {
+            hostnameElement.textContent = "GitHub Pages";
+        } else if (currentContent === '{{ server_ip }}' || currentContent === '') {
+            hostnameElement.textContent = window.location.hostname || "localhost";
         }
     </script>
 </body>
