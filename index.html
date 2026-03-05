@@ -32,6 +32,25 @@
             font-weight: bold;
             color: #d9534f;
         }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1em;
+            text-align: left;
+            margin-top: 1.5em;
+            padding-top: 1.5em;
+            border-top: 1px solid #eee;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #666;
+        }
+        .info-value {
+            font-family: monospace;
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
@@ -39,17 +58,40 @@
         <h1>Proof of Network Membership</h1>
         <p>This page is currently being served from:</p>
         <p class="hostname" id="hostname">{{ server_ip }}</p>
-    <p><small>A simple website to prove network membership (when studying VPNs in Cyber).<br>Designed to look nice in browsers and via cURL requests.</small></p>
+        
+        <div class="info-grid">
+            <span class="info-label">Your IP Address:</span>
+            <span class="info-value" id="client-ip">{{ client_ip }}</span>
+            
+            <span class="info-label">Network Status:</span>
+            <span class="info-value" id="network-status">{{ network_status }}</span>
+            
+            <span class="info-label">Host Header:</span>
+            <span class="info-value" id="host-header">{{ host_header }}</span>
+        </div>
+
+        <p><small>A simple website to prove network membership (when studying VPNs in Cyber).<br>Designed to look nice in browsers and via cURL requests.</small></p>
     </div>
     <script>
         // Check if hosted on GitHub Pages or if the placeholder wasn't replaced
         const hostnameElement = document.getElementById('hostname');
-        const currentContent = hostnameElement.textContent.trim();
+        const clientIpElement = document.getElementById('client-ip');
+        const networkStatusElement = document.getElementById('network-status');
+        const hostHeaderElement = document.getElementById('host-header');
+
+        const currentHostname = hostnameElement.textContent.trim();
         
         if (window.location.hostname.endsWith('.github.io')) {
             hostnameElement.textContent = "GitHub Pages";
-        } else if (currentContent === '{{ server_ip }}' || currentContent === '') {
+            clientIpElement.textContent = "Unavailable (Static Hosting)";
+            networkStatusElement.textContent = "Public Internet";
+            hostHeaderElement.textContent = window.location.host;
+        } else if (currentHostname === '{{ server_ip }}' || currentHostname === '') {
+            // Fallback for when not served by the Python server or Jinja
             hostnameElement.textContent = window.location.hostname || "localhost";
+            clientIpElement.textContent = "Detection Failed";
+            networkStatusElement.textContent = "Unknown";
+            hostHeaderElement.textContent = window.location.host;
         }
     </script>
 </body>
